@@ -62,7 +62,8 @@ export async function POST(req: Request) {
         console.log(`Unknown plan: ${plan}`);
       }
 
-      user.stripeCustomerId = session.customer;
+      // ✅ FIXED: session.customer can be object or string
+      user.stripeCustomerId = typeof session.customer === 'string' ? session.customer : null;
       if (session.subscription) user.stripeSubscriptionId = session.subscription as string;
 
       await user.save();

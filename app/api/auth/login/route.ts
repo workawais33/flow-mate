@@ -37,7 +37,7 @@ export async function POST(req: Request) {
 
     const now = new Date();
     let hasAccess = false;
-    let plan = user.subscriptionPlan || user.plan || "none";
+    let plan = user.subscriptionPlan || "none"; // ✅ FIXED
 
     if (plan === "basic") {
       hasAccess = true;
@@ -101,7 +101,6 @@ export async function POST(req: Request) {
 
   } catch (error) {
     console.error("Login error:", (error as Error).message);
-    
     return NextResponse.json(
       { message: "Internal server error" },
       { status: 500 }

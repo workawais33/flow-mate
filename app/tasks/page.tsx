@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CheckCircle2, Plus, Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
 
 import RouteGuard from "@/components/route-guard";
 import { AppShell } from "@/components/layout/app-shell";
@@ -19,14 +20,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+interface Task {
+  _id: string;
+  title: string;
+  completed: boolean;
+  priority?: string;
+}
+
 export default function TasksPage() {
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [title, setTitle] = useState("");
 
   const fetchTasks = async () => {
     try {
       const res = await fetch("/api/tasks", {
-        credentials: "include",  
+        credentials: "include",
       });
 
       const data = await res.json();
@@ -40,67 +48,72 @@ export default function TasksPage() {
     fetchTasks();
   }, []);
 
-const addTask = async () => {
-  if (!title.trim()) return;
+  const addTask = async () => {
+    if (!title.trim()) return;
 
-  try {
-    const res = await fetch("/api/tasks", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",  
-      body: JSON.stringify({ title }),
-    });
+    try {
+      const res = await fetch("/api/tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ title }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (!res.ok) {
-      alert(data.message || "Task creation failed");
-      return;
+      if (!res.ok) {
+        toast.error(data.message || "Task creation failed");
+        return;
+      }
+
+      setTitle("");
+      fetchTasks();
+    } catch (error) {
+      console.log("FULL ERROR:", error);
+      toast.error("Server error while creating task");
     }
+  };
 
-    setTitle("");
-    fetchTasks();
-  } catch (error) {
-    console.log("FULL ERROR:", error);
-    alert("Server error while creating task");
-  }
-};
-  const deleteTask = async (id) => {
+  // ✅ FIXED: Added type to id parameter
+  const deleteTask = async (id: string) => {
     try {
       const res = await fetch(`/api/tasks/${id}`, {
         method: "DELETE",
-        credentials: "include",  
+        credentials: "include",
       });
 
       if (!res.ok) {
         const data = await res.json();
-        alert(data.message || "Delete failed");
+        toast.error(data.message || "Delete failed");
         return;
       }
 
       fetchTasks();
     } catch (error) {
       console.log("Error deleting task");
+      toast.error("Failed to delete task");
     }
   };
 
-  const toggleTask = async (id) => {
+  // ✅ FIXED: Added type to id parameter
+  const toggleTask = async (id: string) => {
     try {
       const res = await fetch(`/api/tasks/${id}`, {
         method: "PATCH",
-        credentials: "include",  
+        credentials: "include",
       });
 
       if (!res.ok) {
-        alert("Toggle failed");
+        toast.error("Toggle failed");
         return;
       }
 
       fetchTasks();
     } catch (error) {
       console.log("Toggle error");
+      toast.error("Failed to update task");
     }
   };
 

@@ -2,8 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ReactNode } from "react";
 
-export default function RouteGuard({ children }) {
+interface RouteGuardProps {
+  children: ReactNode;
+}
+
+export default function RouteGuard({ children }: RouteGuardProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
@@ -36,5 +41,5 @@ export default function RouteGuard({ children }) {
     );
   }
 
-  return children;
+  return <>{children}</>;
 }

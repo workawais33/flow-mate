@@ -1,20 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function PaymentSuccessPage() {
+function PaymentSuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("session_id");
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      router.push("/dashboard");
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, [router]);
+    if (sessionId) {
+      const timer = setTimeout(() => router.push("/dashboard"), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [router, sessionId]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -26,5 +25,13 @@ export default function PaymentSuccessPage() {
         <div className="animate-pulse">Please wait...</div>
       </div>
     </div>
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PaymentSuccessContent />
+    </Suspense>
   );
 }

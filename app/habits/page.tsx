@@ -8,8 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
+interface Habit {
+  _id: string;
+  title: string;
+  streak: number;
+  completedDates: string[];
+}
+
 export default function HabitsPage() {
-  const [habits, setHabits] = useState([]);
+  const [habits, setHabits] = useState<Habit[]>([]);
   const [name, setName] = useState("");
 
   const fetchHabits = async () => {
@@ -62,7 +69,8 @@ export default function HabitsPage() {
     }
   };
 
-  const checkHabit = async (id) => {
+  // ✅ FIXED: Added type to id parameter
+  const checkHabit = async (id: string) => {
     const today = new Date().toISOString().split("T")[0];
 
     try {

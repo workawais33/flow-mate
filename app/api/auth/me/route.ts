@@ -26,7 +26,7 @@ export async function GET() {
       );
     }
 
-    const plan = user.subscriptionPlan || user.plan || "none";
+    const plan = user.subscriptionPlan || "none"; // ✅ FIXED
 
     const access = checkAccess({
       plan: plan,
