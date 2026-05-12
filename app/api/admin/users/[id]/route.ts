@@ -5,7 +5,7 @@ import { isAdmin } from "@/lib/adminAuth";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
@@ -18,9 +18,10 @@ export async function PATCH(
       );
     }
     
+    const { id } = await context.params;
     const { isBlocked, subscriptionPlan, isPaid } = await req.json();
     
-    const user = await User.findById(params.id);
+    const user = await User.findById(id);
     if (!user) {
       return NextResponse.json(
         { error: "User not found" },
@@ -46,7 +47,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     await connectDB();
@@ -59,7 +60,8 @@ export async function DELETE(
       );
     }
     
-    await User.findByIdAndDelete(params.id);
+    const { id } = await context.params;
+    await User.findByIdAndDelete(id);
     
     return NextResponse.json({ success: true });
   } catch (error) {
