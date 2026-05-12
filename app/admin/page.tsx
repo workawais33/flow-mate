@@ -89,7 +89,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-lg">Loading...</div>
+        <div className="text-lg text-gray-900">Loading...</div>
       </div>
     );
   }
@@ -99,7 +99,7 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <div>
-            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
             <p className="text-gray-600">Manage users and subscriptions</p>
           </div>
           <button
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
             placeholder="Search by name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 bg-white"
           />
         </div>
         
@@ -125,21 +125,21 @@ export default function AdminDashboard() {
             <table className="w-full">
               <thead className="bg-gray-50 border-b">
                 <tr>
-                  <th className="p-4 text-left">Name</th>
-                  <th className="p-4 text-left">Email</th>
-                  <th className="p-4 text-left">Plan</th>
-                  <th className="p-4 text-left">Paid</th>
-                  <th className="p-4 text-left">Status</th>
-                  <th className="p-4 text-left">Admin</th>
-                  <th className="p-4 text-left">Joined</th>
-                  <th className="p-4 text-left">Actions</th>
+                  <th className="p-4 text-left text-gray-700">Name</th>
+                  <th className="p-4 text-left text-gray-700">Email</th>
+                  <th className="p-4 text-left text-gray-700">Plan</th>
+                  <th className="p-4 text-left text-gray-700">Paid</th>
+                  <th className="p-4 text-left text-gray-700">Status</th>
+                  <th className="p-4 text-left text-gray-700">Admin</th>
+                  <th className="p-4 text-left text-gray-700">Joined</th>
+                  <th className="p-4 text-left text-gray-700">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredUsers.map((user) => (
                   <tr key={user._id} className="border-t hover:bg-gray-50">
-                    <td className="p-4 font-medium">{user.name}</td>
-                    <td className="p-4">{user.email}</td>
+                    <td className="p-4 font-medium text-gray-900">{user.name}</td>
+                    <td className="p-4 text-gray-600">{user.email}</td>
                     <td className="p-4">
                       <span className={`px-2 py-1 rounded text-xs ${
                         user.subscriptionPlan === "yearly" ? "bg-green-100 text-green-800" :
@@ -171,7 +171,7 @@ export default function AdminDashboard() {
                         <span className="px-2 py-1 rounded text-xs bg-gray-100 text-gray-800">User</span>
                       )}
                     </td>
-                    <td className="p-4 text-sm">
+                    <td className="p-4 text-sm text-gray-600">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>
                     <td className="p-4">
