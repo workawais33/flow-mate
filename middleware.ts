@@ -6,7 +6,7 @@ export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
   const { pathname } = req.nextUrl;
 
-  const publicRoutes = ["/login", "/pricing", "/payment-success", "/api/stripe/checkout", "/api/verify-payment", "/api/stripe/webhook"];
+  const publicRoutes = ["/login", "/pricing", "/payment-success", "/api/stripe/checkout", "/api/verify-payment", "/api/stripe/webhook", "/forgot-password", "/reset-password"];
   
   if (publicRoutes.some(route => pathname.startsWith(route))) {
     return NextResponse.next();
@@ -28,5 +28,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/tasks/:path*", "/habits/:path*", "/profile/:path*"],
+  matcher: ["/dashboard/:path*", "/tasks/:path*", "/habits/:path*", "/profile/:path*", "/admin/:path*"],
 };

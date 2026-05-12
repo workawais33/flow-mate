@@ -13,6 +13,7 @@ export interface IUser extends Document {
   subscriptionEndsAt: Date | null;
   isBlocked: boolean;
   isPaid: boolean;
+  isAdmin: boolean;
   emailVerified: boolean;
   verificationToken: string | null;
   verificationTokenExpires: Date | null;
@@ -72,6 +73,10 @@ const userSchema = new Schema<IUser>(
       default: false,
     },
     isPaid: {
+      type: Boolean,
+      default: false,
+    },
+    isAdmin: {
       type: Boolean,
       default: false,
     },
