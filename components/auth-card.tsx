@@ -141,6 +141,14 @@ export function AuthCard({ mode }: { mode: "login" | "register" }) {
               />
             </div>
 
+            {isLogin && (
+              <div className="text-right">
+                <Link href="/forgot-password" className="text-sm text-blue-600 hover:underline">
+                  Forgot Password?
+                </Link>
+              </div>
+            )}
+
             <Button className="w-full" type="submit" disabled={isLoading}>
               {isLoading ? "Please wait..." : (isLogin ? "Login" : "Register")}
             </Button>
