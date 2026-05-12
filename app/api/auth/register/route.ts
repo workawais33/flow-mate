@@ -1,8 +1,9 @@
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import crypto from "crypto";
+import { sendVerificationEmail } from "@/lib/email";
 
 interface RegisterBody {
   name: string;
@@ -38,6 +39,9 @@ export async function POST(request: Request) {
     const trialEndsAt = new Date();
     trialEndsAt.setDate(now.getDate() + 7);
 
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    const verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
     const user = await User.create({
       name,
       email,
@@ -48,33 +52,21 @@ export async function POST(request: Request) {
       subscriptionStatus: "trial",
       trialStart: now,
       trialEndsAt: trialEndsAt,
+      emailVerified: false,
+      verificationToken: verificationToken,
+      verificationTokenExpires: verificationTokenExpires,
     });
 
-    const token = jwt.sign(
-      { 
-        id: user._id,
-        email: user.email,
-        hasAccess: true,
-        plan: "trial"
-      },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "7d" }
-    );
+    await sendVerificationEmail({
+      to: user.email,
+      name: user.name,
+      userId: user._id.toString(),
+      token: verificationToken,
+    });
 
     const response = NextResponse.json({
-      message: "User created successfully",
+      message: "Registration successful! Please check your email to verify your account.",
       userId: user._id.toString(),
-      hasAccess: true,
-      plan: "trial",
-      trialEndsAt: trialEndsAt,
-    });
-
-    response.cookies.set("token", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 60 * 60 * 24 * 7,
     });
 
     return response;

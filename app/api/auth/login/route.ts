@@ -26,6 +26,13 @@ export async function POST(req: Request) {
       );
     }
 
+    if (!user.emailVerified) {
+      return NextResponse.json(
+        { message: "Please verify your email before logging in. Check your inbox." },
+        { status: 401 }
+      );
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
@@ -37,7 +44,7 @@ export async function POST(req: Request) {
 
     const now = new Date();
     let hasAccess = false;
-    let plan = user.subscriptionPlan || "none"; // ✅ FIXED
+    let plan = user.subscriptionPlan || "none";
 
     if (plan === "basic") {
       hasAccess = true;
